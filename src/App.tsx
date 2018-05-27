@@ -1,12 +1,12 @@
 import * as React from 'react';
 import './App.css';
 
-import { Square } from './square/square';
+import { Game } from './game/game';
 
 class App extends React.Component {
 	public render() {
 		return (
-			<div />
+			<Game />
 		);
 	}
 }

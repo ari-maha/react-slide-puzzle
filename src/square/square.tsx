@@ -10,7 +10,7 @@ export interface ISquareProps {
 
 function Square(props : ISquareProps) {
     if (props.marker === 9) {
-        return (<div className="square" />)
+        return (<div className="square">9</div>)
     }
 
     function clickHandler() {
