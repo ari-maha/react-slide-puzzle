@@ -8,6 +8,7 @@ export class Game extends React.Component<object, IBoardProps> {
     constructor(props : object) {
         super(props);
         this.state = {
+            hasWon : false,
             squares : this.generateSquares()
         }
     }
@@ -18,6 +19,7 @@ export class Game extends React.Component<object, IBoardProps> {
                 <button onClick={this.resetGame}>Reset Game</button>
                 <Board 
                     squares={this.state.squares}
+                    hasWon={this.state.hasWon}
                 />
             </div>
         );
@@ -25,6 +27,7 @@ export class Game extends React.Component<object, IBoardProps> {
 
     private resetGame = () => {
         this.setState({
+            hasWon : false,
             squares : this.generateSquares()
         })
     }

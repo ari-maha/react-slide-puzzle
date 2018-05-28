@@ -8,6 +8,7 @@ export interface ISquare {
 }
 
 export interface IBoardProps {
+    hasWon : boolean;
     squares : ISquare[][];
 }
 
@@ -16,16 +17,38 @@ export class Board extends React.Component<IBoardProps, IBoardProps> {
     constructor(props : IBoardProps) {
         super(props);
         this.state = {
+            hasWon : this.props.hasWon,
             squares : this.props.squares
         }
     }
 
     public render() {
         return (
-            <div className="board">
-                {this.generateSquares()}
+            <div>
+                <div className="board">
+                    {this.generateSquares()}
+                </div>
+                {this.getWinningMessage()}
             </div>
         );
+    }
+
+    public componentWillMount() {
+        this.randomizeSelections();
+    }
+
+    public componentWillReceiveProps() {
+        this.setState({
+            hasWon : this.props.hasWon,
+            squares : this.props.squares
+        });
+    }
+
+    private getWinningMessage() {
+        if (this.state.hasWon) {
+            return "Congrats. You have won."
+        }
+        return null;
     }
 
     private getSquare(squareObject : ISquareProps) {
@@ -84,6 +107,9 @@ export class Board extends React.Component<IBoardProps, IBoardProps> {
 
 
     private handleClick(position : number[]) { 
+        if (this.state.hasWon) {
+            return;
+        }
         const i : number = position[0];
         const j :number = position[1];
         if (this.isEmptySquare(this.state.squares[i][j])) {
@@ -95,21 +121,46 @@ export class Board extends React.Component<IBoardProps, IBoardProps> {
                 squares : newSquares
             });
             if (this.checkWinner(newSquares)) {
-                alert("Congrats");
+                this.setState({
+                    hasWon : true
+                })
             }
         }
     }
 
     private checkWinner(squares : ISquare[][]) {
         const count = 3;
-        let hasWon : boolean = false;
+        const hasWon : boolean = true;
         for (let i = 0; i < count; i++) {
             for (let j = 0; j < count; j++) {
-                hasWon = squares[i][j].marker === (i*3) + j + 1
+                if (squares[i][j].marker !== (i*3) + j + 1) {
+                    return false;
+                }
             }
         }
         return hasWon;
     }
+
+    private randomizeSelections() {
+        const totalChanges = 200;
+        let count = 0;
+        let stateArray = JSON.parse(JSON.stringify(this.state.squares));
+        while (count < totalChanges) {
+            const i = Math.floor(Math.random()*3);
+            const j =  Math.floor(Math.random()*3);
+            if (!this.isEmptySquare(stateArray[i][j])) {
+                const newSquares = this.getNewSquares(stateArray, i , j);
+                if (newSquares) {
+                    stateArray = JSON.parse(JSON.stringify(newSquares));
+                    count++;
+                }
+            }
+        }
+        this.setState({
+            squares : stateArray
+        })
+    }
+
 
     private generateSquares(){
         const returnArray = [];
