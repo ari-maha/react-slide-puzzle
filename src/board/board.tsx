@@ -42,11 +42,12 @@ export class Board extends React.Component<IBoardProps, IBoardProps> {
             hasWon : this.props.hasWon,
             squares : this.props.squares
         });
+        this.randomizeSelections();
     }
 
     private getWinningMessage() {
         if (this.state.hasWon) {
-            return "Congrats. You have won."
+            return "Congrats. You have won.";
         }
         return null;
     }
@@ -123,7 +124,7 @@ export class Board extends React.Component<IBoardProps, IBoardProps> {
             if (this.checkWinner(newSquares)) {
                 this.setState({
                     hasWon : true
-                })
+                });
             }
         }
     }
@@ -158,7 +159,7 @@ export class Board extends React.Component<IBoardProps, IBoardProps> {
         }
         this.setState({
             squares : stateArray
-        })
+        });
     }
 
 
